@@ -1,0 +1,107 @@
+{
+    "name": "guest",
+    "email": "guest@guest.com",
+    "password": "guest",
+    "contacts": [
+        {
+            "badgecolor": "#1FD7C1",
+            "initials": "RS",
+            "register": "R",
+            "name": "Rainer Sonnenschein",
+            "email": "sonnenschein@draussen.de",
+            "phone": "+49 30 5678 9456",
+            "selected": false
+        },
+        {
+            "badgecolor": "#00BEE8",
+            "initials": "PN",
+            "register": "P",
+            "name": "Pia Nist",
+            "email": "musikerin@mitherz.de",
+            "phone": "+49 221 3456412",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FFA35E",
+            "initials": "AF",
+            "register": "A",
+            "name": "Arne Fröhlich",
+            "email": "fröhlich@24-7.com",
+            "phone": "+49 815 79183212",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FFA35E",
+            "initials": "KE",
+            "register": "K",
+            "name": "Karl Ender",
+            "email": "karlender@datum.com",
+            "phone": "+49 711 3652987",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FF745E",
+            "initials": "KH",
+            "register": "K",
+            "name": "Klara Himmel",
+            "email": "gerne@sommer.de",
+            "phone": "+49 123 456 789",
+            "selected": false
+        },
+        {
+            "badgecolor": "#00BEE8",
+            "initials": "CK",
+            "register": "C",
+            "name": "Christiane Krise",
+            "email": "krise@serveranbindung.de",
+            "phone": "+49 221 3456413",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FFE62B",
+            "initials": "DD",
+            "register": "D",
+            "name": "Daniel Düsentrieb",
+            "email": "intern@guru.de",
+            "phone": "+49 324097786",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FC71FF",
+            "initials": "DD",
+            "register": "D",
+            "name": "Donald Duck",
+            "email": "dduck@entenhausen.eh",
+            "phone": "9384659365",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FF4646",
+            "initials": "MM",
+            "register": "M",
+            "name": "Mickey Duck",
+            "email": "mmouse@entenhausen.eh",
+            "phone": "835769376",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FFE62B",
+            "initials": "DD",
+            "register": "D",
+            "name": "Daisy Duck",
+            "email": "daisy@entenhausen.eh",
+            "phone": "834679",
+            "selected": false
+        },
+        {
+            "badgecolor": "#FFBB2B",
+            "initials": "TD",
+            "register": "T",
+            "name": "Trick Duck",
+            "email": "tridu@entenhausen.eh",
+            "phone": "385639",
+            "selected": false
+        }
+    ],
+    "tasks": []
+}
