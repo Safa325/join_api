@@ -14,13 +14,11 @@ class Subtask(models.Model):
 class Task(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
+        on_delete=models.CASCADE
     )
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500, blank=True)
-    # assignedTo = models.ManyToManyField('Contacts', related_name='tasks', blank=True)
+    assignedTo = models.ManyToManyField('Contacts', related_name='tasks_assigned', blank=True)
     priority = models.CharField(max_length=10, blank=True)
     category = models.CharField(max_length=100, blank=True)
     dueDate = models.DateField(blank=True, null=True)
@@ -30,12 +28,10 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
-
 class Contacts(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        null=True,
+        on_delete=models.CASCADE
     )
     badgecolor = models.CharField(max_length=8)
     initials = models.CharField(max_length=2)
@@ -44,7 +40,7 @@ class Contacts(models.Model):
     email = models.EmailField(max_length=254)
     phone = models.CharField(max_length=20)
     selected = models.BooleanField(default=False)
-    task = models.ManyToManyField(Task, related_name='assignedTo', blank=True)
+    
     
     def __str__(self):
         return  self.name

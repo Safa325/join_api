@@ -28,13 +28,14 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'Safa325.pythonanywhere.com',
     '127.0.0.1',
-    'localhoast'
+    'localhost'
     ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5501",
 ]
+
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -55,21 +56,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'custom_user_auth',
     'rest_framework',
     'corsheaders',
+    'rest_framework.authtoken',
 ]
  
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
+
 
 ROOT_URLCONF = 'join_api.urls'
 
@@ -136,11 +139,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -152,3 +150,15 @@ MEDIA_ROOT = '/home/Safa325/join_api/media'
 MEDIA_URL = '/media/'
 STATIC_ROOT = '/home/Safa325/join_api/static'
 STATIC_URL = '/static/'
+
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000']
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+

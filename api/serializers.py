@@ -1,44 +1,45 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Task, Contacts, Subtask
 from django.db import transaction
+from .models import Task, Contacts, Subtask
+from rest_framework.exceptions import ValidationError
 
 class SubtaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
         fields = ['id', 'title', 'done']
 
+
 class ContactsSerializer(serializers.ModelSerializer):
-    Username = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:
         model = Contacts
-        fields = ['id', 'Username', 'badgecolor', 'initials', 'register', 'name', 'email', 'phone', 'selected']
+        fields = ['id', 'badgecolor', 'initials', 'register', 'name', 'email', 'phone', 'selected']
 
 class TaskSerializer(serializers.ModelSerializer):
     subtasks = SubtaskSerializer(many=True, required=False)
-    assignedTo = ContactsSerializer(many=True)
+    assignedTo = ContactsSerializer(many=True, required=False)
 
     class Meta:
         model = Task
         fields = ['id', 'title', 'description', 'assignedTo', 'priority', 'category', 'dueDate', 'status', 'subtasks']
 
     def create(self, validated_data):
+
         subtasks_data = validated_data.pop('subtasks', [])
         assigned_to_data = validated_data.pop('assignedTo', [])
-
+        
         with transaction.atomic():
-            # Erstelle die Hauptaufgabe (`task`)
+            
             task = Task.objects.create(**validated_data)
 
-            # Füge Kontakte hinzu oder erstelle sie, falls nicht vorhanden
             contact_ids = []
             for contact_data in assigned_to_data:
+                contact_data['selected'] = False
                 contact, created = Contacts.objects.get_or_create(**contact_data)
                 contact_ids.append(contact.id)
             task.assignedTo.set(contact_ids)
-
-            # Erstelle die `subtasks` und verknüpfe sie mit der `task`
+            
             for subtask_data in subtasks_data:
                 Subtask.objects.create(task=task, **subtask_data)
 
@@ -48,7 +49,6 @@ class TaskSerializer(serializers.ModelSerializer):
         subtasks_data = validated_data.pop('subtasks', [])
         assigned_to_data = validated_data.pop('assignedTo', [])
 
-        # Aktualisiere die Felder der Hauptaufgabe (`task`)
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.priority = validated_data.get('priority', instance.priority)
@@ -60,6 +60,7 @@ class TaskSerializer(serializers.ModelSerializer):
         # Kontakte aktualisieren oder erstellen und zuordnen
         contact_ids = []
         for contact_data in assigned_to_data:
+            contact_data['selected'] = False
             contact, created = Contacts.objects.get_or_create(**contact_data)
             contact_ids.append(contact.id)
         instance.assignedTo.set(contact_ids)
@@ -68,12 +69,12 @@ class TaskSerializer(serializers.ModelSerializer):
         existing_subtask_ids = [subtask.id for subtask in instance.subtasks.all()]
         new_subtask_ids = [subtask.get('id') for subtask in subtasks_data if subtask.get('id')]
 
-        # Entferne `subtasks`, die nicht in `subtasks_data` vorhanden sind
+        # Entferne subtasks, die nicht in subtasks_data vorhanden sind
         for subtask in instance.subtasks.all():
             if subtask.id not in new_subtask_ids:
                 subtask.delete()
 
-        # Aktualisiere oder erstelle `subtasks`
+        # Aktualisiere oder erstelle subtasks
         for subtask_data in subtasks_data:
             subtask_id = subtask_data.get('id')
             if subtask_id and subtask_id in existing_subtask_ids:
@@ -84,7 +85,7 @@ class TaskSerializer(serializers.ModelSerializer):
                 Subtask.objects.create(task=instance, **subtask_data)
 
         return instance
-
+    
 class UserSerializer(serializers.ModelSerializer):
     user_contacts = ContactsSerializer(many=True, source='contacts_set')
     user_tasks = TaskSerializer(many=True, source='task_set')
@@ -92,3 +93,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'user_contacts', 'user_tasks']
+        
+    def create(self, validated_data):
+        # Benutzer aus dem Kontext abrufen und sicherstellen, dass `user` gesetzt wird
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return Contacts.objects.create(**validated_data)
+
