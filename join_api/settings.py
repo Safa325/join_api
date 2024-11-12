@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-8k5qglqcvcx4*+4r#vsa1+f)07j)6rj4e+0q%e3_6rds8cs5-i
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'Safa325.pythonanywhere.com',
+    'safa325.pythonanywhere.com',
     '127.0.0.1',
     'localhost'
     ]
