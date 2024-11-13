@@ -28,12 +28,14 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'safa325.pythonanywhere.com',
     '127.0.0.1',
-    'localhost'
+    'localhost',
+    'https://dabubble-312.ch/'
     ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5501",
+    "https://dabubble-312.ch"
 ]
 
 
