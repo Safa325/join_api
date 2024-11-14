@@ -20,7 +20,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 'write_only': True
             }
         }
- 
+        
+    def validate_email(self, value):
+        # Überprüft, ob die E-Mail bereits existiert
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Diese E-Mail-Adresse ist bereits registriert.")
+        return value
+
     def save(self):
         pw = self.validated_data['password']
         repeated_password = self.validated_data['repeated_password']
