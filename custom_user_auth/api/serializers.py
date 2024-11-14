@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from custom_user_auth.models import UserProfile
 from django.contrib.auth.models import User
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth import get_user_model
 
 class UserProfileSerializers(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +11,9 @@ class UserProfileSerializers(serializers.ModelSerializer):
 
        
 class RegistrationSerializer(serializers.ModelSerializer):
-    
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     repeated_password = serializers.CharField(write_only=True)
        
     class Meta:
@@ -20,12 +24,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
                 'write_only': True
             }
         }
-        
-    def validate_email(self):
-        email = self.validated_data['email']
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("Diese E-Mail-Adresse ist bereits registriert.")
-        return email
 
     def save(self):
         pw = self.validated_data['password']
