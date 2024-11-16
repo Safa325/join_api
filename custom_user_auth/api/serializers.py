@@ -2,14 +2,12 @@ from rest_framework import serializers
 from custom_user_auth.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
-from django.contrib.auth import get_user_model
 
 class UserProfileSerializers(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['id', 'username', 'email']
 
-       
 class RegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -28,7 +26,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def save(self):
         pw = self.validated_data['password']
         repeated_password = self.validated_data['repeated_password']
+        email = self.validated_data['email']
         
+        if email == User.objects.filter('email'):
+            raise serializers.ValidationError({'error':'email exists!'})
+       
         if pw != repeated_password:
             raise serializers.ValidationError({'error':'password dont match!'})
       
@@ -45,7 +47,6 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         email = attrs.get('email')
         password = attrs.get('password')
 
-        
         try:
             user = User.objects.get(email=email)
             if not user.check_password(password):
@@ -53,6 +54,5 @@ class CustomAuthTokenSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid email/password combination.")
 
-        
         attrs['user'] = user
         return attrs    
