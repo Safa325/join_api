@@ -89,4 +89,4 @@ class RegisterView(APIView):
             # Fehler des Serializers zurückgeben
             return Response(serializer.errors, status=400)      
 
-        
+       
