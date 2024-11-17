@@ -9,11 +9,8 @@ class UserProfileSerializers(serializers.ModelSerializer):
         fields = ['id', 'username', 'email']
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
     repeated_password = serializers.CharField(write_only=True)
-       
+      
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'repeated_password']
@@ -28,17 +25,17 @@ class RegistrationSerializer(serializers.ModelSerializer):
         repeated_password = self.validated_data['repeated_password']
         email = self.validated_data['email']
         
-        if email == User.objects.filter('email'):
-            raise serializers.ValidationError({'error':'email exists!'})
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({'error': 'Email already exists!'})
        
         if pw != repeated_password:
-            raise serializers.ValidationError({'error':'password dont match!'})
+            raise serializers.ValidationError({'error': 'password dont match!'})
       
         account = User(email=self.validated_data['email'],username=self.validated_data['username'])
         account.set_password(pw)
         account.save()
         return account
-    
+   
 class CustomAuthTokenSerializer(serializers.Serializer):
     email = serializers.EmailField(label="Email")
     password = serializers.CharField(label="Password", style={'input_type': 'password'}, trim_whitespace=False)

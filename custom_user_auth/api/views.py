@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-
+from django.contrib.auth.models import User
 
 class UserProfileList(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
@@ -36,27 +36,57 @@ class CustomLoginView(ObtainAuthToken):
         return Response(data)    
  
  
-class RegisterView(APIView):
-    permission_classes = [AllowAny]  
+# class RegisterView(APIView):
+#     permission_classes = [AllowAny]  
     
-    data = {}
+#     data = {}
+
+#     def post(self, request):
+#         serializer = RegistrationSerializer(data=request.data)
+        
+#         email = data['email']
+        
+#         if not User.objects.filter(email=email).exists() and serializer.is_valid():
+#             saved_account = serializer.save()
+#             token, created = Token.objects.get_or_create(user=saved_account)
+#             data = {
+#                 'token': token.key,
+#                 'username': saved_account.username,
+#                 'email': saved_account.email,
+#             }
+#         else:
+#             data= serializer.errors
+            
+#         return Response(data)
+        
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
-        
+
+        # Überprüfen, ob die E-Mail-Adresse existiert
         if serializer.is_valid():
-            saved_account = serializer.save()
-            token, created = Token.objects.get_or_create(user=saved_account)
-            data = {
-                'token': token.key,
-                'username': saved_account.username,
-                'email': saved_account.email,
-            }
+            email = serializer.validated_data['email']
+            if not User.objects.filter(email=email).exists():
+                # Benutzerkonto speichern und Token erstellen
+                saved_account = serializer.save()
+                token, _ = Token.objects.get_or_create(user=saved_account)
+                return Response(
+                    {
+                        'token': token.key,
+                        'username': saved_account.username,
+                        'email': saved_account.email,
+                    },
+                    status=201,  # HTTP Statuscode: Created
+                )
+            else:
+                return Response(
+                    {'error': 'Ein Benutzer mit dieser E-Mail existiert bereits.'},
+                    status=400,  # HTTP Statuscode: Bad Request
+                )
         else:
-            data= serializer.errors
-            
-        return Response(data)
-        
-        
+            # Fehler des Serializers zurückgeben
+            return Response(serializer.errors, status=400)      
 
         
