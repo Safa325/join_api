@@ -6,17 +6,6 @@ Das Backend für die **Join-To-Do-App** ist mit dem Django Framework und Django 
 
 ---
 
-## Inhaltsverzeichnis
-
-1. [Features](#features)
-2. [API-Endpunkte](#api-endpunkte)
-3. [Installation und Einrichtung](#installation-und-einrichtung)
-4. [Datenbank](#datenbank)
-5. [Deployment auf PythonAnywhere](#deployment-auf-pythonanywhere)
-6. [Projektstruktur](#projektstruktur)
-
----
-
 ## Features
 
 - **Benutzer-Authentifizierung**: Eigene Benutzeranmeldung mit Token-Authentifizierung.
@@ -54,9 +43,4 @@ Das Backend für die **Join-To-Do-App** ist mit dem Django Framework und Django 
 - pip (Python-Paketmanager)
 - Virtuelle Umgebung (optional, aber empfohlen)
 
-### Schritte
 
-1. **Repository klonen**
-   ```bash
-   git clone https://github.com/dein-github-account/join-backend.git
-   cd join-backend
