@@ -24,7 +24,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         pw = self.validated_data['password']
         repeated_password = self.validated_data['repeated_password']
         email = self.validated_data['email']
-        
+       
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError({'error': 'Email already exists!'})
        
